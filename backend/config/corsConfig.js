@@ -2,8 +2,7 @@ const whitelist = [
   'http://localhost:3000',
   'http://localhost:5001',
   'http://localhost:5173',
-  'https://ecommerce-clone-bl.vercel.app',
-  'https://admin-ecommerce-clone-bl.vercel.app'
+  'https://test-gba.vercel.app',
 ]
 
 const corsOptions = {
