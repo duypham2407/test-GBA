@@ -34,13 +34,14 @@ export default function Login() {
 
   const onSubmit = async (values: z.infer<typeof loginSchema>) => {
     try {
-      const res = await API.post("/auth/login", values);
-      localStorage.setItem("accessToken", res.data.accessToken);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      await API.post("/auth/login", values);
       toast.success("Đăng nhập thành công!");
       navigate("/");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Đăng nhập thất bại");
+    } catch (err) {
+      const message =
+        (err as { response?: { data?: { message?: string } } })?.response?.data
+          ?.message || "Đăng nhập thất bại";
+      toast.error(message);
     }
   };
 

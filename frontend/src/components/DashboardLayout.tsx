@@ -1,30 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate, Link, useLocation } from "react-router";
 import { Box, LayoutDashboard, LogOut, Package } from "lucide-react";
 import { Button } from "./ui/button";
 import { Toaster } from "./ui/sonner";
+import API from "../lib/api";
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (!token) {
-      navigate("/login");
-    }
+    API.get("/auth/me")
+      .then(() => setLoading(false))
+      .catch(() => navigate("/login"));
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("user");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      await API.delete("/auth/logout");
+    } finally {
+      navigate("/login");
+    }
   };
 
   const navItems = [
     { name: "Tổng quan", path: "/", icon: LayoutDashboard },
     { name: "Sản phẩm", path: "/products", icon: Package },
   ];
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-gray-400">Đang xác thực...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50/50 flex flex-col md:flex-row">

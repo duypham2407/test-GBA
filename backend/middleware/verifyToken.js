@@ -1,10 +1,8 @@
 import jwt from "jsonwebtoken";
 
 export const verifyTokenAdmin = (req, res, next) => {
-  const authHeader = req.headers.authorization || req.headers.accesstoken;
-  if (authHeader) {
-    const token = authHeader.split(" ")[1];
-
+  const token = req.cookies?.accessToken;
+  if (token) {
     jwt.verify(token, process.env.JWT_KEY, (err, user) => {
       if (err) return res.status(403).json({ message: "Token is not valid!" });
 
